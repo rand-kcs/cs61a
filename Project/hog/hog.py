@@ -22,6 +22,16 @@ def roll_dice(num_rolls, dice=six_sided):
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    cnt,k,flag = 0,0,0
+    while k < num_rolls:
+        tmp = dice()
+        if(tmp==1):
+            flag = 1
+        cnt+=tmp
+        k = k+1
+    if(flag==1):
+        cnt = 1
+    return cnt
     # END PROBLEM 1
 
 
@@ -33,6 +43,9 @@ def free_bacon(score):
     assert score < 100, 'The game should be over.'
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    
+    return 10 - score%10 + score//10
+
     # END PROBLEM 2
 
 
@@ -51,6 +64,12 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if(num_rolls == 0):
+        return free_bacon(opponent_score)
+    return roll_dice(num_rolls,dice)
+
+
+
     # END PROBLEM 3
 
 
@@ -60,6 +79,12 @@ def is_swap(player_score, opponent_score):
     """
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    flag = abs(player_score%10 - opponent_score%10)
+    opponent_score//=10
+    if(flag == opponent_score%10):
+        return True
+    return False
+
     # END PROBLEM 4
 
 
@@ -104,6 +129,31 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
+    ppoint1 , ppoint0 = 0,0
+    while(1):
+        if(who==0):
+            bonus = 0
+            num_rulls0 = strategy0(score0,score1)
+            if abs(num_rulls0-ppoint0)==2 and feral_hogs==True:
+                bonus = 3
+            ppoint0 = take_turn(num_rulls0,score1,dice)            
+            score0 = score0+ppoint0+bonus
+            if(is_swap(score0,score1)):
+                score0,score1 = score1,score0
+        else:
+            bonus = 0
+            num_rulls1 = strategy1(score1,score0)
+
+            if abs(num_rulls1-ppoint1)==2 and feral_hogs == True:
+                bonus = 3
+            ppoint1 = take_turn(num_rulls1,score0,dice)
+            score1 = score1+ppoint1+bonus
+            if(is_swap(score1,score0)):
+                score0,score1 = score1,score0
+
+        if(score0>=goal or score1 >=goal):
+            break
+        who=other(who)
     # END PROBLEM 6
     return score0, score1
 
