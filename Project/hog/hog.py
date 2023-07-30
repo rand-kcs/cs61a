@@ -298,6 +298,12 @@ def make_averaged(original_function, trials_count=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def func(*arg):
+        cnt = 0
+        for _ in range(trials_count):
+            cnt+=original_function(*arg)
+        return cnt/trials_count
+    return func    
     # END PROBLEM 8
 
 
@@ -312,6 +318,13 @@ def max_scoring_num_rolls(dice=six_sided, trials_count=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    MaxIndex ,MaxVal= 1 , 0
+    for index in range(1,11):
+        Val =  make_averaged(roll_dice,trials_count)(index,dice)
+        if(Val>MaxVal):
+            MaxIndex,MaxVal = index,Val
+        index+=1
+    return MaxIndex
     # END PROBLEM 9
 
 
@@ -340,13 +353,13 @@ def run_experiments():
         six_sided_max = max_scoring_num_rolls(six_sided)
         print('Max scoring num rolls for six-sided dice:', six_sided_max)
 
-    if False:  # Change to True to test always_roll(8)
+    if True:  # Change to True to test always_roll(8)
         print('always_roll(8) win rate:', average_win_rate(always_roll(8)))
 
-    if False:  # Change to True to test bacon_strategy
+    if True:  # Change to True to test bacon_strategy
         print('bacon_strategy win rate:', average_win_rate(bacon_strategy))
 
-    if False:  # Change to True to test swap_strategy
+    if True:  # Change to True to test swap_strategy
         print('swap_strategy win rate:', average_win_rate(swap_strategy))
 
     if False:  # Change to True to test final_strategy
@@ -361,7 +374,12 @@ def bacon_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     rolls NUM_ROLLS otherwise.
     """
     # BEGIN PROBLEM 10
-    return 6  # Replace this statement
+     # Replace this statement
+    if free_bacon(opponent_score)>=cutoff:
+        return 0
+    return num_rolls
+
+
     # END PROBLEM 10
 
 
@@ -371,7 +389,13 @@ def swap_strategy(score, opponent_score, cutoff=8, num_rolls=6):
     non-beneficial swap. Otherwise, it rolls NUM_ROLLS.
     """
     # BEGIN PROBLEM 11
-    return 6  # Replace this statement
+    # Replace this statement
+    bacon = free_bacon(opponent_score)
+    if (bacon>=cutoff and (not(score+bacon>opponent_score and is_swap(score+bacon,opponent_score)))) or (score+bacon<opponent_score and is_swap(score+bacon,opponent_score)) :
+        return 0
+    return num_rolls
+    
+    
     # END PROBLEM 11
 
 
