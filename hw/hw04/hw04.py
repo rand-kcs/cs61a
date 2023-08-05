@@ -198,6 +198,15 @@ def replace_leaf(t, find_value, replace_value):
     True
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        if label(t) == find_value:
+            return tree(replace_value)
+        else:
+            return t
+
+
+    return tree(label(t),sum([[replace_leaf(branch,find_value,replace_value)] for branch in branches(t)],[]))
+
 
 
 def preorder(t):
@@ -211,6 +220,10 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        return [label(t)]
+
+    return [label(t)] + sum([preorder(branch) for branch in branches(t)],[])
 
 
 def has_path(t, phrase):
@@ -243,6 +256,16 @@ def has_path(t, phrase):
     """
     assert len(phrase) > 0, 'no path for empty phrases.'
     "*** YOUR CODE HERE ***"
+    if len(phrase) == 1 and label(t) == phrase[0]:
+        return True
+
+    if(label(t)==phrase[0]):
+        flag = False
+        for branch in branches(t):
+            flag = flag or has_path(branch,phrase[1:])
+        return flag
+    else:
+        return False
 
 
 def interval(a, b):
@@ -252,10 +275,13 @@ def interval(a, b):
 def lower_bound(x):
     """Return the lower bound of interval x."""
     "*** YOUR CODE HERE ***"
+    return x[0]
 
 def upper_bound(x):
     """Return the upper bound of interval x."""
     "*** YOUR CODE HERE ***"
+    return x[1]
+
 def str_interval(x):
     """Return a string representation of interval x.
     """
@@ -270,10 +296,10 @@ def add_interval(x, y):
 def mul_interval(x, y):
     """Return the interval that contains the product of any value in x and any
     value in y."""
-    p1 = x[0] * y[0]
-    p2 = x[0] * y[1]
-    p3 = x[1] * y[0]
-    p4 = x[1] * y[1]
+    p1 = lower_bound(x) * lower_bound(y)
+    p2 = lower_bound(x) * upper_bound(y)
+    p3 = upper_bound(x) * lower_bound(y)
+    p4 = upper_bound(x) * upper_bound(x)
     return [min(p1, p2, p3, p4), max(p1, p2, p3, p4)]
 
 
