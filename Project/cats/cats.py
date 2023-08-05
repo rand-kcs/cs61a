@@ -15,8 +15,16 @@ def choose(paragraphs, select, k):
     paragraph returns true. If there are fewer than K such paragraphs, return
     the empty string.
     """
-    # BEGIN PROBLEM 1
+    # BEGIN PROBLEM 1r
     "*** YOUR CODE HERE ***"
+    i = -1
+    for para in paragraphs:
+        if(select(para)):
+            i+=1
+            if(i==k):
+                return para
+    return ''
+
     # END PROBLEM 1
 
 
@@ -33,6 +41,16 @@ def about(topic):
     assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    def func(para):
+        para = split(lower(remove_punctuation(para)))
+        for t in topic:
+            for p in para:
+                if(t == p):
+                    return True
+        return False
+    return func
+
+
     # END PROBLEM 2
 
 
@@ -57,6 +75,18 @@ def accuracy(typed, reference):
     reference_words = split(reference)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    total = len(reference_words)
+    if total == 0 or len(typed_words)==0:
+        return 0.0
+    cur, valid= 0,0
+    while cur < total and cur < len(typed_words):
+       if typed_words[cur] == reference_words[cur]:
+           valid+=1
+       cur+=1   
+       print("DEBUG: ",valid) 
+    return valid/len(typed_words)*100
+
+
     # END PROBLEM 3
 
 
@@ -65,6 +95,7 @@ def wpm(typed, elapsed):
     assert elapsed > 0, 'Elapsed time must be positive'
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    return len(typed)/5/elapsed*60
     # END PROBLEM 4
 
 
