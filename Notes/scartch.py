@@ -7,4 +7,11 @@ def add1(f):
 add_one = lambda x:x+1
 mul_three = lambda x:x*3
 
-add1
+class Account:
+    def __init__(self,holder):
+        self.balance =  0
+        self.name = holder
+
+    def deposit(self,amount):
+        self.newx+=amount
+        return self.newx
