@@ -163,6 +163,9 @@ class ThrowerAnt(Ant):
     implemented = True
     damage = 1
     # ADD/OVERRIDE CLASS ATTRIBUTES HERE
+    min_range = 0
+    max_range = float('inf')
+
     food_cost = 3
 
     def nearest_bee(self, beehive):
@@ -172,7 +175,27 @@ class ThrowerAnt(Ant):
         This method returns None if there is no such Bee (or none in range).
         """
         # BEGIN Problem 3 and 4
-        return rANTdom_else_none(self.place.bees) # REPLACE THIS LINE
+        CurPosmin,CurPosmax = self.min_range,self.max_range
+        CurPlace = self.place
+        while CurPosmin and not CurPlace == beehive:
+            CurPlace = CurPlace.entrance
+            CurPosmin-=1
+            CurPosmax-=1
+
+        while CurPosmax>=0 and not CurPlace == beehive:
+            if CurPlace.bees:
+                return rANTdom_else_none(CurPlace.bees)
+            CurPlace = CurPlace.entrance
+            CurPosmax-=1
+        return None
+
+
+        # cur = self.place
+        # while not cur == beehive:
+        #     if(cur.bees):
+        #         return rANTdom_else_none(cur.bees)
+        #     cur = cur.entrance
+        # return None    
         # END Problem 3 and 4
 
     def throw_at(self, target):
@@ -200,8 +223,9 @@ class ShortThrower(ThrowerAnt):
     name = 'Short'
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
+    max_range = 3
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 4
 
 class LongThrower(ThrowerAnt):
@@ -210,8 +234,9 @@ class LongThrower(ThrowerAnt):
     name = 'Long'
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
+    min_range = 5
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 4
 
 class FireAnt(Ant):
@@ -222,7 +247,7 @@ class FireAnt(Ant):
     food_cost = 5
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 5
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 5
 
     def __init__(self, armor=3):
@@ -238,6 +263,22 @@ class FireAnt(Ant):
         """
         # BEGIN Problem 5
         "*** YOUR CODE HERE ***"
+        dama = amount
+        CurPos = self.place
+        if self.armor<=amount:
+            dama +=self.damage
+        Ant.reduce_armor(self,amount)
+        i = 0
+        while i < len(CurPos.bees):
+            print("DEBUG: ",dama ,"  ",CurPos.bees[i].armor)
+            flag = True
+            if CurPos.bees[i].armor < dama:
+                flag = False
+            CurPos.bees[i].reduce_armor(dama)
+            if flag:
+                i+=1
+
+
         # END Problem 5
 
 class HungryAnt(Ant):
@@ -514,8 +555,6 @@ class ScaryThrower(ThrowerAnt):
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
         # END Problem EC
-
-class LaserAnt(ThrowerAnt):
     # This class is optional. Only one test is provided for this class.
 
     name = 'Laser'
